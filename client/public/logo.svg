@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <g id="ol_monogram">
+    
+    <path 
+      id="o_circle"
+      d="M50 80C66.5685 80 80 66.5685 80 50C80 33.4315 66.5685 20 50 20C33.4315 20 20 33.4315 20 50C20 66.5685 33.4315 80 50 80Z" 
+      stroke="#0F172A" 
+      stroke-width="12" 
+      stroke-linecap="round"
+    />
+    
+    <path 
+      id="l_shape"
+      d="M50 35V65H80" 
+      stroke="#38BDF8" 
+      stroke-width="12" 
+      stroke-linecap="round" 
+      stroke-linejoin="round"
+    />
+    
+  </g>
+</svg>
