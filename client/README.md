@@ -1,16 +1,37 @@
-# React + Vite
+# Orglytics
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Orglytics is a web app that helps visualize and manage organization data in a clear and structured way.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+##  What this app does
 
-## React Compiler
+* Shows organizations and their companies
+* Displays employee and company information
+* Helps understand tech stacks used in each company
+* Gives a simple view of how systems and architecture are structured
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+##  Purpose
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The goal of Orglytics is to turn complex organization data into a **clean and easy-to-understand dashboard**.
+
+Instead of using boring tables, it focuses on:
+
+* simple layouts
+* visual components
+* modern UI
+
+---
+
+## Why this project
+
+This project is built to:
+
+* Practice building real-world dashboards
+* Learn modern frontend development (React + Tailwind)
+* Focus on clean UI/UX design
+* Build something scalable for future features
+
+-
