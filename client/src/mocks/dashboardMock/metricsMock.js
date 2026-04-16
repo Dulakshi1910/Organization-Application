@@ -1,0 +1,58 @@
+export const metricsMock = [
+  {
+    title: "Total Companies",
+    value: 128,
+    change: "+12 this month",
+    color: "text-emerald-400",
+    accent: "bg-gradient-to-r from-indigo-500 to-purple-500",
+  },
+  {
+    title: "Employees",
+    value: "8.4K",
+    change: "+18%",
+    color: "text-emerald-400",
+    accent: "bg-gradient-to-r from-teal-400 to-cyan-500",
+  },
+  {
+    title: "Tech Assets",
+    value: 512,
+    change: "+36",
+    color: "text-emerald-400",
+    accent: "bg-gradient-to-r from-amber-400 to-orange-500",
+  },
+  {
+    title: "Stale Profiles",
+    value: 23,
+    change: "Needs cleanup",
+    color: "text-red-400",
+    accent: "bg-gradient-to-r from-red-500 to-pink-500",
+  },
+  {
+    title: "Active Signals",
+    value: 76,
+    change: "+9 today",
+    color: "text-emerald-400",
+    accent: "bg-gradient-to-r from-blue-500 to-indigo-500",
+  },
+  {
+    title: "Integrations",
+    value: 34,
+    change: "+3",
+    color: "text-emerald-400",
+    accent: "bg-gradient-to-r from-violet-500 to-fuchsia-500",
+  },
+  {
+    title: "Alerts",
+    value: 19,
+    change: "+5 critical",
+    color: "text-red-400",
+    accent: "bg-gradient-to-r from-rose-500 to-red-600",
+  },
+  {
+    title: "Growth Rate",
+    value: "22%",
+    change: "+2%",
+    color: "text-emerald-400",
+    accent: "bg-gradient-to-r from-green-400 to-emerald-500",
+  },
+];

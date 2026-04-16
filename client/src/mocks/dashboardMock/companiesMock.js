@@ -1,0 +1,17 @@
+export const companiesMock = [
+  { name: "Pulsar AI", description: "ML platform", tech: ["Python", "K8s"], employees: 142, score: 94 },
+  { name: "Miru Corp", description: "Analytics platform", tech: ["React", "Go"], employees: 78, score: 88 },
+  { name: "Cortex Labs", description: "AI infra", tech: ["Rust", "WASM"], employees: 54, score: 71 },
+  { name: "Velox Finance", description: "Trading systems", tech: ["Java", "Kafka"], employees: 96, score: 82 },
+  { name: "Luminary", description: "Workflow automation", tech: ["TypeScript", "Node"], employees: 63, score: 76 },
+  { name: "StackProbe", description: "Dev tooling", tech: ["Go", "Rust"], employees: 38, score: 91 },
+  { name: "Helix Bio", description: "Biotech AI", tech: ["Python", "R"], employees: 112, score: 65 },
+  { name: "Orbis Cloud", description: "Cloud optimization", tech: ["Go", "Terraform"], employees: 89, score: 87 },
+  { name: "Nova Systems", description: "Enterprise SaaS", tech: ["Java", "React"], employees: 210, score: 83 },
+  { name: "Aether Labs", description: "AI research", tech: ["PyTorch", "CUDA"], employees: 67, score: 92 },
+  { name: "Zenith Tech", description: "Cybersecurity", tech: ["C++", "Rust"], employees: 145, score: 85 },
+  { name: "Nimbus AI", description: "AI cloud ops", tech: ["Python", "K8s"], employees: 98, score: 89 },
+  { name: "QuantumOps", description: "Infra scaling", tech: ["Go", "K8s"], employees: 73, score: 84 },
+  { name: "Vertex Systems", description: "Data platforms", tech: ["Scala", "Spark"], employees: 156, score: 78 },
+  { name: "EchoStack", description: "DevOps tools", tech: ["Node", "Docker"], employees: 61, score: 80 },
+];
