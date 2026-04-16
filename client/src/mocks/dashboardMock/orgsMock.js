@@ -1,0 +1,17 @@
+export const orgsMock = [
+  { name: "Apex Ventures", companies: 12, health: 88, status: "Active" },
+  { name: "Meridian Group", companies: 9, health: 72, status: "Active" },
+  { name: "Vantage Capital", companies: 7, health: 55, status: "Review" },
+  { name: "Nova Partners", companies: 8, health: 80, status: "Active" },
+  { name: "Crest Fund", companies: 6, health: 65, status: "Review" },
+  { name: "Ironwood Capital", companies: 6, health: 90, status: "Active" },
+  { name: "BluePeak Ventures", companies: 10, health: 77, status: "Active" },
+  { name: "Helios Group", companies: 5, health: 69, status: "Review" },
+  { name: "Stratus Holdings", companies: 11, health: 82, status: "Active" },
+  { name: "Quantum Ventures", companies: 4, health: 74, status: "Active" },
+  { name: "Orion Capital", companies: 7, health: 68, status: "Review" },
+  { name: "Nebula Group", companies: 9, health: 85, status: "Active" },
+  { name: "Vertex Holdings", companies: 6, health: 79, status: "Active" },
+  { name: "Polaris Ventures", companies: 8, health: 73, status: "Review" },
+  { name: "Atlas Group", companies: 13, health: 91, status: "Active" },
+];

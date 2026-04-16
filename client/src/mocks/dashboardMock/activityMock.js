@@ -1,0 +1,17 @@
+export const activityMock = [
+  { text: "Pulsar AI added 5 engineers", time: "2m ago" },
+  { text: "Miru Corp updated tech stack", time: "10m ago" },
+  { text: "Cortex Labs profile flagged stale", time: "25m ago" },
+  { text: "Velox Finance added Kafka pipeline", time: "40m ago" },
+  { text: "Luminary deployed new feature", time: "1h ago" },
+  { text: "StackProbe launched v2 API", time: "2h ago" },
+  { text: "Helix Bio dataset updated", time: "3h ago" },
+  { text: "Orbis Cloud infra scaled", time: "5h ago" },
+  { text: "Nova Systems onboarded team", time: "6h ago" },
+  { text: "Aether Labs released model", time: "8h ago" },
+  { text: "Zenith Tech fixed security issue", time: "10h ago" },
+  { text: "Nimbus AI upgraded cluster", time: "12h ago" },
+  { text: "QuantumOps optimized pipeline", time: "14h ago" },
+  { text: "Vertex Systems data sync complete", time: "18h ago" },
+  { text: "EchoStack deployed CI/CD update", time: "1d ago" },
+];
