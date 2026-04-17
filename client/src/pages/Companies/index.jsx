@@ -19,8 +19,18 @@ function Companies() {
 
   useEffect(() => {
     const load = async () => {
-      const res = await getCompanies();
-      setCompanies(Array.isArray(res) ? res : []);
+      // infer organization (use first org) then fetch companies
+      try {
+        const orgsRes = await fetch('/api/organizations');
+        const orgsJson = orgsRes.ok ? await orgsRes.json() : { data: [] };
+        const orgs = Array.isArray(orgsJson.data) ? orgsJson.data : [];
+        const orgId = orgs[0]?._id || orgs[0]?.id || null;
+
+        const res = await getCompanies(orgId);
+        setCompanies(Array.isArray(res) ? res : []);
+      } catch {
+        setCompanies([]);
+      }
     };
     load();
   }, []);
@@ -35,13 +45,10 @@ function Companies() {
       );
     }
 
-    // FILTER
-    if (filter === "Active") {
-      data = data.filter((c) => c.status === "active");
-    }
-
-    if (filter === "Review") {
-      data = data.filter((c) => c.status === "review");
+    // FILTER — compare against raw status values (lowercase)
+    if (filter && filter !== "All") {
+      const raw = filter.toLowerCase();
+      data = data.filter((c) => (c.status || "").toLowerCase() === raw);
     }
 
     return data;
@@ -70,7 +77,7 @@ function Companies() {
             />
 
             <div className="flex gap-2">
-              {["All", "Active", "Review"].map((f) => (
+              {["All", "Active", "Inactive", "Stealth", "Acquired"].map((f) => (
                 <button
                   key={f}
                   onClick={() => setFilter(f)}

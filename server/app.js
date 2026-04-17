@@ -2,6 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
+import organizationRoutes from './routes/organization.js';
+import companyRoutes from './routes/company.js';
+import companyGlobalRoutes from './routes/companyGlobal.js';
+import dashboardRoutes from './routes/dashboard.js';
 
 const app = express();
 
@@ -10,6 +14,11 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Use routes
+app.use('/api/organizations', organizationRoutes);
+app.use('/api/organizations/:orgId/companies', companyRoutes);
+app.use('/api/organizations/:orgId/dashboard', dashboardRoutes);
+app.use('/api/companies', companyGlobalRoutes);
 
 // Basic health check route
 app.get('/api/health', (req, res) => {

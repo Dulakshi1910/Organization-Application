@@ -6,6 +6,7 @@ function StepTech({ form, setForm }) {
     backend: "",
     database: "",
     devops: "",
+    cloud: "",
   });
 
   const handleAdd = (type, e) => {
@@ -132,6 +133,30 @@ function StepTech({ form, setForm }) {
             className="mt-2 w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white text-sm"
           />
           {renderTags("devops")}
+        </div>
+
+        {/* CLOUD */}
+        <div>
+          <label className="text-sm text-slate-300">Cloud provider</label>
+          <select
+            value={form.tech?.cloud || inputs.cloud}
+            onChange={(e) => {
+              setForm({ ...form, tech: { ...(form.tech || {}), cloud: e.target.value } });
+              setInputs({ ...inputs, cloud: e.target.value });
+            }}
+            className="mt-2 w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white text-sm"
+          >
+            <option value="">Select cloud...</option>
+            <option>AWS</option>
+            <option>GCP</option>
+            <option>Azure</option>
+            <option>Vercel</option>
+            <option>Cloudflare</option>
+            <option>DigitalOcean</option>
+            <option>On-premise</option>
+            <option>Hybrid</option>
+            <option>Other</option>
+          </select>
         </div>
 
       </div>

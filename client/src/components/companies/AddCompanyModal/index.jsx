@@ -20,18 +20,13 @@ function AddCompanyModal({ open, onClose, onSuccess }) {
     name: "",
     description: "",
     industry: "",
-    org: "New Org",
+    org: "",
     employees: "",
     founded: "",
     status: "active",
-    tech: [],
+    tech: { frontend: [], backend: [], database: [], devops: [], cloud: "" },
     architecture: "",
-    tools: {
-      project: [],
-      communication: [],
-      ci: [],
-      monitoring: [],
-    },
+    tools: { projectManagement: "", communication: "", cicd: "", monitoring: "" },
   });
 
   if (!open) return null;
@@ -45,15 +40,35 @@ function AddCompanyModal({ open, onClose, onSuccess }) {
     setLoading(true);
 
     const payload = {
-      ...form,
+      name: form.name,
+      industry: form.industry,
+      description: form.description,
+      foundedYear: Number(form.founded) || undefined,
       employees: Number(form.employees) || 0,
-      tech: Array.isArray(form.tech) ? form.tech : [],
-      founded: form.founded || "-",
-      updated: "just now",
-      score: 80,
+      status: form.status === 'review' ? 'stealth' : form.status,
+      techStack: {
+        frontend: form.tech?.frontend || [],
+        backend: form.tech?.backend || [],
+        database: form.tech?.database || [],
+        devops: form.tech?.devops || [],
+        cloud: form.tech?.cloud || undefined,
+      },
+      architecture: form.architecture,
+      engineeringHealth: {
+        testCoverage: Number(form.testCoverage) || 0,
+        techDebt: Number(form.techDebt) || 0,
+        uptime: Number(form.uptime) || 99,
+      },
+      tools: {
+        projectManagement: form.tools?.projectManagement || undefined,
+        communication: form.tools?.communication || undefined,
+        cicd: form.tools?.cicd || undefined,
+        monitoring: form.tools?.monitoring || undefined,
+      },
+      score: form.score || 80,
     };
 
-    const res = await createCompany(payload);
+    const res = await createCompany(form.org, payload);
 
     setLoading(false);
 
