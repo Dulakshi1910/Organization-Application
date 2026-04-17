@@ -16,17 +16,11 @@ function Dashboard() {
     orgs: [],
     activity: [],
   });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
-      try {
-        setLoading(true);
-        const res = await getDashboardData();
-        setData(res || {});
-      } finally {
-        setLoading(false);
-      }
+      const res = await getDashboardData();
+      setData(res || {});
     };
 
     loadData();
@@ -49,13 +43,9 @@ function Dashboard() {
     <div className="w-full min-w-0 space-y-8">
       {/* Metrics */}
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {loading
-          ? [0, 1, 2, 3].map((i) => (
-              <div key={i} className="h-20 bg-slate-800 rounded-lg p-4 animate-pulse" />
-            ))
-          : filteredMetrics.map((m) => (
-              <MetricCard key={m.title} {...m} />
-            ))}
+        {filteredMetrics.map((m) => (
+          <MetricCard key={m.title} {...m} />
+        ))}
       </div>
 
       {/* Top Technologies */}
@@ -67,23 +57,14 @@ function Dashboard() {
           </div>
 
           <div className="flex flex-col gap-3">
-            {loading
-              ? [0, 1, 2].map((i) => (
-                  <div key={i} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-6 bg-slate-800 rounded animate-pulse" />
-                    </div>
-                    <div className="w-12 h-4 bg-slate-800 rounded animate-pulse" />
-                  </div>
-                ))
-              : (data.raw?.topTechnologies?.frontend || data.raw?.top_technologies?.frontend || []).slice(0, 3).map((t, i) => (
-                  <div key={t.tech || t._id || i} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <TechChip label={t.tech || t._id || t} />
-                    </div>
-                    <span className="text-xs text-gray-400">{t.usedBy ?? t.count ?? 0} uses</span>
-                  </div>
-                ))}
+            {(data.raw?.topTechnologies?.frontend || data.raw?.top_technologies?.frontend || []).slice(0, 3).map((t, i) => (
+              <div key={t.tech || t._id || i} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <TechChip label={t.tech || t._id || t} />
+                </div>
+                <span className="text-xs text-gray-400">{t.usedBy ?? t.count ?? 0} uses</span>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -94,23 +75,14 @@ function Dashboard() {
           </div>
 
           <div className="flex flex-col gap-3">
-            {loading
-              ? [0, 1, 2].map((i) => (
-                  <div key={i} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-6 bg-slate-800 rounded animate-pulse" />
-                    </div>
-                    <div className="w-12 h-4 bg-slate-800 rounded animate-pulse" />
-                  </div>
-                ))
-              : (data.raw?.topTechnologies?.backend || data.raw?.top_technologies?.backend || []).slice(0, 3).map((t, i) => (
-                  <div key={t.tech || t._id || i} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <TechChip label={t.tech || t._id || t} />
-                    </div>
-                    <span className="text-xs text-gray-400">{t.usedBy ?? t.count ?? 0} uses</span>
-                  </div>
-                ))}
+            {(data.raw?.topTechnologies?.backend || data.raw?.top_technologies?.backend || []).slice(0, 3).map((t, i) => (
+              <div key={t.tech || t._id || i} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <TechChip label={t.tech || t._id || t} />
+                </div>
+                <span className="text-xs text-gray-400">{t.usedBy ?? t.count ?? 0} uses</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -128,14 +100,10 @@ function Dashboard() {
               </Link>
           </div>
 
-          {loading
-            ? [0, 1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-12 bg-slate-800 rounded-md animate-pulse" />
-              ))
-            : Array.isArray(data.orgs) &&
-                data.orgs.slice(0, 5).map((o) => (
-                  <OrgCard key={o.name} org={o} />
-                ))}
+          {Array.isArray(data.orgs) &&
+            data.orgs.slice(0, 5).map((o) => (
+              <OrgCard key={o.name} org={o} />
+            ))}
         </div>
 
         {/* Activity */}
@@ -147,14 +115,10 @@ function Dashboard() {
             <span className="text-xs text-indigo-400">All signals →</span>
           </div>
 
-          {loading
-            ? [0, 1, 2, 3].map((i) => (
-                <div key={i} className="h-10 bg-slate-800 rounded-md animate-pulse" />
-              ))
-            : Array.isArray(data.activity) &&
-                data.activity.slice(0, 10).map((a, i) => (
-                  <ActivityItem key={i} item={a} />
-                ))}
+          {Array.isArray(data.activity) &&
+            data.activity.slice(0, 10).map((a, i) => (
+              <ActivityItem key={i} item={a} />
+            ))}
         </div>
       </div>
 
@@ -170,14 +134,10 @@ function Dashboard() {
         </div>
 
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {loading
-            ? [0, 1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="h-28 bg-slate-800 rounded-md animate-pulse" />
-              ))
-            : Array.isArray(data.companies) &&
-                data.companies.slice(0, 9).map((c) => (
-                  <CompanyCard key={c.name} company={c} />
-                ))}
+          {Array.isArray(data.companies) &&
+            data.companies.slice(0, 9).map((c) => (
+              <CompanyCard key={c.name} company={c} />
+            ))}
         </div>
       </div>
     </div>

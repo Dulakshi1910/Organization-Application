@@ -1,8 +1,5 @@
 import { getOrganizations } from "./organizationService";
 
-const CACHE = {};
-const CACHE_TTL = 60 * 1000; // cache dashboard data per org for 60s
-
 const safe = (obj, ...paths) => {
   for (const p of paths) {
     const parts = p.split(".");
@@ -26,11 +23,10 @@ const toMetric = (title, value, change = "", extra = {}) => ({
 
 export const getDashboardData = async (orgId) => {
   try {
+    // determine orgId if not provided
     let selectedOrgId = orgId;
-
-    // fetch organizations once (avoid duplicate requests)
-    const orgsRes = await getOrganizations();
     if (!selectedOrgId) {
+      const orgsRes = await getOrganizations();
       if (Array.isArray(orgsRes.data) && orgsRes.data.length > 0) {
         selectedOrgId = orgsRes.data[0]._id || orgsRes.data[0].id;
       }
@@ -43,13 +39,6 @@ export const getDashboardData = async (orgId) => {
         orgs: [],
         activity: [],
       };
-    }
-
-    // short-lived in-memory cache to reduce repeated fetches
-    const cacheKey = selectedOrgId || "_default";
-    const cached = CACHE[cacheKey];
-    if (cached && Date.now() - cached.ts < CACHE_TTL) {
-      return cached.data;
     }
 
     const res = await fetch(`/api/organizations/${selectedOrgId}/dashboard`);
@@ -102,8 +91,9 @@ export const getDashboardData = async (orgId) => {
       : [];
 
     // use orgs endpoint for org list (fallback to payload.organization)
-    const orgs = Array.isArray(orgsRes.data) && orgsRes.data.length > 0
-      ? orgsRes.data
+    const orgsRes2 = await getOrganizations();
+    const orgs = Array.isArray(orgsRes2.data) && orgsRes2.data.length > 0
+      ? orgsRes2.data
       : (payload.organization ? [payload.organization] : []);
 
     // update organizations metric with actual count
@@ -115,20 +105,13 @@ export const getDashboardData = async (orgId) => {
       ? recent.slice(0, 10).map((c) => ({ text: `${c.name || c.companyName || 'Company'} updated profile`, time: c.updatedAt ? new Date(c.updatedAt).toLocaleString() : 'recent' }))
       : [];
 
-    const result = {
+    return {
       metrics,
       companies,
       orgs,
       activity,
       raw: payload,
     };
-
-    // store in cache
-    try {
-      CACHE[cacheKey] = { ts: Date.now(), data: result };
-    } catch (e) {}
-
-    return result;
   } catch (error) {
     return {
       metrics: [],
