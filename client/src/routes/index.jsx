@@ -5,6 +5,7 @@ import Companies from "../pages/Companies";
 import CreateCompany from "../pages/Companies/CreateCompany";
 import Organizations from "../pages/Organizations";
 import CreateOrganizationPage from "../pages/Organizations/create/index";
+import Technology from "../pages/Technology"; // ✅ added
 
 import DashboardLayout from "../components/layout/DashboardLayout";
 
@@ -13,7 +14,6 @@ function AppRoutes() {
     <BrowserRouter>
       <Routes>
 
-        {/* Dashboard */}
         <Route
           path="/"
           element={
@@ -23,7 +23,6 @@ function AppRoutes() {
           }
         />
 
-        {/* Companies */}
         <Route
           path="/companies"
           element={
@@ -33,7 +32,6 @@ function AppRoutes() {
           }
         />
 
-       
         <Route
           path="/companies/create"
           element={
@@ -43,7 +41,6 @@ function AppRoutes() {
           }
         />
 
-        {/* Organizations */}
         <Route
           path="/organizations"
           element={
@@ -53,12 +50,21 @@ function AppRoutes() {
           }
         />
 
-        {/* Create Organization */}
         <Route
           path="/organizations/create"
           element={
             <DashboardLayout>
               <CreateOrganizationPage />
+            </DashboardLayout>
+          }
+        />
+
+        {/* ✅ NEW ROUTE */}
+        <Route
+          path="/tech-radar"
+          element={
+            <DashboardLayout>
+              <Technology />
             </DashboardLayout>
           }
         />

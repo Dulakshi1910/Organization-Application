@@ -23,14 +23,16 @@ function Sidebar() {
   const activeClass =
     "bg-[#1F2937] text-white";
 
+  
   const navItems = [
     { name: "Dashboard", path: "/", icon: FiHome, end: true },
     { name: "Organizations", path: "/organizations", icon: FiLayers },
     { name: "Companies", path: "/companies", icon: FiBriefcase },
+    { name: "Tech Radar", path: "/tech-radar", icon: FiActivity }, 
   ];
 
+  
   const futureItems = [
-    { name: "Tech Radar", icon: FiActivity },
     { name: "Architecture Map", icon: FiMap },
     { name: "Settings", icon: FiSettings },
   ];
