@@ -27,8 +27,13 @@ export const getDashboardData = async (orgId) => {
     let selectedOrgId = orgId;
     if (!selectedOrgId) {
       const orgsRes = await getOrganizations();
-      if (Array.isArray(orgsRes.data) && orgsRes.data.length > 0) {
-        selectedOrgId = orgsRes.data[0]._id || orgsRes.data[0].id;
+      const orgs = Array.isArray(orgsRes.data) ? orgsRes.data : [];
+      // Prefer an organization that already has companies, otherwise use the first
+      const orgWithCompanies = orgs.find((o) => (o.companyCount || o.companies || 0) > 0);
+      if (orgWithCompanies) {
+        selectedOrgId = orgWithCompanies._id || orgWithCompanies.id;
+      } else if (orgs.length > 0) {
+        selectedOrgId = orgs[0]._id || orgs[0].id;
       }
     }
 

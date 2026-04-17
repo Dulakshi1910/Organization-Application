@@ -20,7 +20,9 @@ function Companies() {
         const orgsRes = await fetch('/api/organizations');
         const orgsJson = orgsRes.ok ? await orgsRes.json() : { data: [] };
         const orgs = Array.isArray(orgsJson.data) ? orgsJson.data : [];
-        const orgId = orgs[0]?._id || orgs[0]?.id || null;
+        // Prefer an org that already has companies, otherwise fall back to the first org
+        const orgWithCompanies = orgs.find((o) => (o.companyCount || o.companies || 0) > 0);
+        const orgId = (orgWithCompanies?._id || orgWithCompanies?.id) || (orgs[0]?._id || orgs[0]?.id) || null;
 
         const res = await getCompanies(orgId);
         setCompanies(Array.isArray(res) ? res : []);
