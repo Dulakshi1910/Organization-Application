@@ -6,15 +6,34 @@ export const getAllOrgs = async (req, res) => {
   try {
     const orgs = await Organization.find({ isActive: true }).sort({ createdAt: -1 });
 
-    // Attach company count to each org
-    const orgsWithCount = await Promise.all(
+    // Attach company count, total employees, and a small preview list of companies to each org
+    const orgsWithStats = await Promise.all(
       orgs.map(async (org) => {
         const count = await Company.countDocuments({ organization: org._id });
-        return { ...org.toObject(), companyCount: count };
+        const employeesAgg = await Company.aggregate([
+          { $match: { organization: org._id } },
+          { $group: { _id: null, total: { $sum: "$employees" } } },
+        ]);
+        const totalEmployees = employeesAgg[0]?.total || 0;
+
+        // provide a preview list (up to 6) of companies (id + name)
+        const preview = await Company.find({ organization: org._id })
+          .sort({ createdAt: -1 })
+          .limit(6)
+          .select("name");
+
+        const companiesPreview = preview.map((c) => ({ id: c._id, name: c.name }));
+
+        return {
+          ...org.toObject(),
+          companyCount: count,
+          employees: totalEmployees,
+          companiesPreview,
+        };
       })
     );
 
-    res.status(200).json({ success: true, data: orgsWithCount });
+    res.status(200).json({ success: true, data: orgsWithStats });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
