@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import Sidebar from "../../components/layout/Sidebar";
 import Header from "../../components/layout/Header";
@@ -27,13 +27,19 @@ function Dashboard() {
     loadData();
   }, []);
 
-  const primaryMetrics = Array.isArray(data.metrics)
-    ? data.metrics.slice(0, 4)
-    : [];
+ 
+  const filteredMetrics = useMemo(() => {
+    const allowed = [
+      "Total Companies",
+      "Employees",
+      "Tech Assets",
+      "Active Signals",
+    ];
 
-  const secondaryMetrics = Array.isArray(data.metrics)
-    ? data.metrics.slice(4, 8)
-    : [];
+    return Array.isArray(data.metrics)
+      ? data.metrics.filter((m) => allowed.includes(m.title))
+      : [];
+  }, [data.metrics]);
 
   return (
     <PageContainer>
@@ -42,21 +48,12 @@ function Dashboard() {
       <div className="flex-1 px-6 md:px-8 py-6 bg-slate-900 min-h-screen">
         <Header />
 
-        {/* Primary Metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-          {primaryMetrics.map((m) => (
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {filteredMetrics.map((m) => (
             <MetricCard key={m.title} {...m} />
           ))}
         </div>
-
-        {/* Secondary Metrics */}
-        {secondaryMetrics.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 opacity-90">
-            {secondaryMetrics.map((m) => (
-              <MetricCard key={m.title} {...m} />
-            ))}
-          </div>
-        )}
 
         {/* Main Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
