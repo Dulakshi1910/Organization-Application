@@ -8,7 +8,9 @@ function CompanyCard({ company }) {
     <Card>
       <div className="flex justify-between items-center">
         <h3 className="text-white font-medium">{company.name}</h3>
-        <span className="text-xs text-green-400">Score {company.score}</span>
+        {company.score !== undefined && company.score !== null && (
+          <span className="text-xs text-green-400">Score {company.score}</span>
+        )}
       </div>
 
       <p className="text-sm text-gray-400 mt-1">{company.description}</p>

@@ -1,9 +1,11 @@
 import { useEffect, useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 
 import MetricCard from "../../components/common/MetricCard";
 import CompanyCard from "../../components/common/CompanyCard";
 import OrgCard from "../../components/common/OrgCard";
 import ActivityItem from "../../components/common/ActivityItem";
+import TechChip from "../../components/ui/TechChip";
 
 import { getDashboardData } from "../../services/dashboardService";
 
@@ -27,9 +29,9 @@ function Dashboard() {
   const filteredMetrics = useMemo(() => {
     const allowed = [
       "Total Companies",
-      "Employees",
-      "Tech Assets",
-      "Active Signals",
+      "Total Employees",
+      "Active Companies",
+      "Organizations",
     ];
 
     return Array.isArray(data.metrics)
@@ -46,6 +48,45 @@ function Dashboard() {
         ))}
       </div>
 
+      {/* Top Technologies */}
+      <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="w-full bg-slate-900/60 border border-slate-800 rounded-2xl p-5">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-sm font-semibold text-slate-200">Top Frontend Tech</h3>
+            <Link to="/tech-radar" className="text-xs text-indigo-400">View all →</Link>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            {(data.raw?.topTechnologies?.frontend || data.raw?.top_technologies?.frontend || []).slice(0, 3).map((t, i) => (
+              <div key={t.tech || t._id || i} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <TechChip label={t.tech || t._id || t} />
+                </div>
+                <span className="text-xs text-gray-400">{t.usedBy ?? t.count ?? 0} uses</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="w-full bg-slate-900/60 border border-slate-800 rounded-2xl p-5">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-sm font-semibold text-slate-200">Top Backend Tech</h3>
+            <Link to="/tech-radar" className="text-xs text-indigo-400">View all →</Link>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            {(data.raw?.topTechnologies?.backend || data.raw?.top_technologies?.backend || []).slice(0, 3).map((t, i) => (
+              <div key={t.tech || t._id || i} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <TechChip label={t.tech || t._id || t} />
+                </div>
+                <span className="text-xs text-gray-400">{t.usedBy ?? t.count ?? 0} uses</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Main Section */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Organizations */}
@@ -54,9 +95,9 @@ function Dashboard() {
             <h3 className="text-sm font-semibold text-slate-200">
               Organizations
             </h3>
-            <span className="text-xs text-indigo-400 cursor-pointer">
-              View all →
-            </span>
+              <Link to="/organizations" className="text-xs text-indigo-400">
+                View all →
+              </Link>
           </div>
 
           {Array.isArray(data.orgs) &&
@@ -71,9 +112,7 @@ function Dashboard() {
             <h3 className="text-sm font-semibold text-slate-200">
               Activity Feed
             </h3>
-            <span className="text-xs text-indigo-400 cursor-pointer">
-              All signals →
-            </span>
+            <span className="text-xs text-indigo-400">All signals →</span>
           </div>
 
           {Array.isArray(data.activity) &&
@@ -89,9 +128,9 @@ function Dashboard() {
           <h3 className="text-sm font-semibold text-slate-200">
             Top Companies
           </h3>
-          <span className="text-xs text-indigo-400 cursor-pointer">
+          <Link to="/companies" className="text-xs text-indigo-400">
             View all →
-          </span>
+          </Link>
         </div>
 
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
