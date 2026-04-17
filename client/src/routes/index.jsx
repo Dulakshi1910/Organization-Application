@@ -75,7 +75,14 @@ function AppRoutes() {
 
         
         <Route path="/companies/create" element={<CreateCompany />} />
-        <Route path="/companies/:companyId" element={<CompanyDetail />} />
+        <Route
+          path="/companies/:companyId"
+          element={
+            <DashboardLayout>
+              <CompanyDetail />
+            </DashboardLayout>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

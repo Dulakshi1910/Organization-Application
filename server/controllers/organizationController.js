@@ -4,7 +4,13 @@ import Company from "../models/company.js";
 // ── GET all organizations ─────────────────────────────────────
 export const getAllOrgs = async (req, res) => {
   try {
-    const orgs = await Organization.find({ isActive: true }).sort({ createdAt: -1 });
+    // Prefer active organizations, but fall back to returning all organizations
+    // if none are marked active. This prevents the frontend from having no
+    // organization to select when `isActive` flags are missing or incorrect.
+    let orgs = await Organization.find({ isActive: true }).sort({ createdAt: -1 });
+    if (!Array.isArray(orgs) || orgs.length === 0) {
+      orgs = await Organization.find().sort({ createdAt: -1 });
+    }
 
     // Attach company count, total employees, and a small preview list of companies to each org
     const orgsWithStats = await Promise.all(
