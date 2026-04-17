@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import TechnologyFilters from "../../components/technology/TechnologyFilters";
 import TechnologyStats from "../../components/technology/TechnologyStats";
 import TechnologyGrid from "../../components/technology/TechnologyGrid";
@@ -9,6 +10,7 @@ function TechnologyPage() {
   const [category, setCategory] = useState("All");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +33,13 @@ function TechnologyPage() {
 
     fetchData();
   }, []);
+
+  // read category from query param on mount
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const q = params.get("category");
+    if (q) setCategory(q);
+  }, [location.search]);
 
   const filteredData = useMemo(() => {
     if (!Array.isArray(data)) return [];

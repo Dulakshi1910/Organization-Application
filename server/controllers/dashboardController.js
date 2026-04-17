@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Company from "../models/company.js";
 import Organization from "../models/organization.js";
 
@@ -92,13 +93,48 @@ export const getDashboard = async (req, res) => {
         { $sort: { count: -1 } },
       ]),
 
-      // 11. 5 most recently added companies (include fields frontend needs)
-      Company.find({ organization: orgId })
-        .sort({ createdAt: -1 })
-        .limit(5)
-        .select(
-          "name description industry status employees brandColor architecture methodology techStack frontend backend database devops engineeringHealth createdAt"
-        ),
+      // 11. 5 most recently added companies (include fields frontend needs) + computed "score"
+      Company.aggregate([
+        { $match: { organization: org._id } },
+        { $sort: { createdAt: -1 } },
+        { $limit: 5 },
+        {
+          $project: {
+            name: 1,
+            description: 1,
+            industry: 1,
+            status: 1,
+            employees: 1,
+            brandColor: 1,
+            architecture: 1,
+            methodology: 1,
+            techStack: 1,
+            frontend: 1,
+            backend: 1,
+            database: 1,
+            devops: 1,
+            engineeringHealth: 1,
+            createdAt: 1,
+            score: {
+              $round: [
+                {
+                  $divide: [
+                    {
+                      $add: [
+                        { $ifNull: ["$engineeringHealth.testCoverage", 0] },
+                        { $ifNull: ["$engineeringHealth.uptime", 0] },
+                        { $subtract: [100, { $ifNull: ["$engineeringHealth.techDebt", 0] }] },
+                      ],
+                    },
+                    3,
+                  ],
+                },
+                0,
+              ],
+            },
+          },
+        },
+      ]),
       // 12. Most common frontend tech across all companies
       Company.aggregate([
         { $match: { organization: org._id, "techStack.frontend": { $exists: true } } },
@@ -156,9 +192,38 @@ export const getDashboard = async (req, res) => {
 // ── GET per-company health comparison ─────────────────────────
 export const getHealthReport = async (req, res) => {
   try {
-    const companies = await Company.find({ organization: req.params.orgId })
-      .select("name engineeringHealth status industry employees")
-      .sort({ "engineeringHealth.techDebt": -1 });
+    const orgId = mongoose.Types.ObjectId(req.params.orgId);
+
+    const companies = await Company.aggregate([
+      { $match: { organization: orgId } },
+      {
+        $project: {
+          name: 1,
+          engineeringHealth: 1,
+          status: 1,
+          industry: 1,
+          employees: 1,
+          score: {
+            $round: [
+              {
+                $divide: [
+                  {
+                    $add: [
+                      { $ifNull: ["$engineeringHealth.testCoverage", 0] },
+                      { $ifNull: ["$engineeringHealth.uptime", 0] },
+                      { $subtract: [100, { $ifNull: ["$engineeringHealth.techDebt", 0] }] },
+                    ],
+                  },
+                  3,
+                ],
+              },
+              0,
+            ],
+          },
+        },
+      },
+      { $sort: { score: -1 } },
+    ]);
 
     res.status(200).json({ success: true, data: companies });
   } catch (err) {
