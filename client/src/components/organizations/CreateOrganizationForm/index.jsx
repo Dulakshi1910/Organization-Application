@@ -7,6 +7,7 @@ function CreateOrganizationForm() {
 
   const [form, setForm] = useState({
     name: "",
+    slug: "",
     description: "",
     industry: "",
     foundedYear: "",
@@ -28,6 +29,7 @@ function CreateOrganizationForm() {
 
     try {
       await createOrganization({
+        slug: form.slug || undefined,
         name: form.name,
         description: form.description,
         industry: form.industry,
@@ -66,6 +68,13 @@ function CreateOrganizationForm() {
           className={inputClass}
           value={form.name}
           onChange={(e) => handleChange("name", e.target.value)}
+        />
+
+        <input
+          placeholder="Slug (optional)"
+          className={inputClass}
+          value={form.slug}
+          onChange={(e) => handleChange("slug", e.target.value)}
         />
 
         <input

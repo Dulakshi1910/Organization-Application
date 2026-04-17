@@ -15,8 +15,18 @@ function Companies() {
 
   useEffect(() => {
     const load = async () => {
-      const res = await getCompanies();
-      setCompanies(Array.isArray(res) ? res : []);
+      // infer organization (use first org) then fetch companies
+      try {
+        const orgsRes = await fetch('/api/organizations');
+        const orgsJson = orgsRes.ok ? await orgsRes.json() : { data: [] };
+        const orgs = Array.isArray(orgsJson.data) ? orgsJson.data : [];
+        const orgId = orgs[0]?._id || orgs[0]?.id || null;
+
+        const res = await getCompanies(orgId);
+        setCompanies(Array.isArray(res) ? res : []);
+      } catch {
+        setCompanies([]);
+      }
     };
     load();
   }, []);
@@ -30,12 +40,10 @@ function Companies() {
       );
     }
 
-    if (filter === "Active") {
-      data = data.filter((c) => c.status === "active");
-    }
-
-    if (filter === "Review") {
-      data = data.filter((c) => c.status === "review");
+    // FILTER — compare against raw status values (lowercase)
+    if (filter && filter !== "All") {
+      const raw = filter.toLowerCase();
+      data = data.filter((c) => (c.status || "").toLowerCase() === raw);
     }
 
     return data;
@@ -55,22 +63,23 @@ function Companies() {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          <div className="flex gap-2">
-            {["All", "Active", "Review"].map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-3 py-1 rounded-full text-xs transition ${
-                  filter === f
-                    ? "bg-indigo-500 text-white"
-                    : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                }`}
-              >
-                {f}
-              </button>
-            ))}
+            <div className="flex gap-2">
+              {["All", "Active", "Inactive", "Stealth", "Acquired"].map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setFilter(f)}
+                  className={`px-3 py-1 rounded-full text-xs transition
+                    ${
+                      filter === f
+                        ? "bg-indigo-500 text-white"
+                        : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                    }`}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
         <button
           onClick={() => navigate("/companies/create")}

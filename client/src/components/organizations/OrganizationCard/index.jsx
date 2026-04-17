@@ -7,6 +7,7 @@ export default function OrganizationCard({ org }) {
   const employees = org?.employees ?? 0;
   const health = org?.health ?? 0;
   const tags = Array.isArray(org?.tags) ? org.tags : [];
+  const companiesPreview = Array.isArray(org?.companiesPreview) ? org.companiesPreview : [];
 
   const isActive = org?.status === "active";
   const isHealthy = health >= 75;
@@ -54,21 +55,20 @@ export default function OrganizationCard({ org }) {
         </div>
       </div>
 
-      {/* Tags / Companies */}
+      {/* Companies preview as pills */}
       <div className="flex flex-wrap gap-2">
-        {tags.length > 0 ? (
-          tags.slice(0, 3).map((tag, index) => (
+        {companiesPreview.length > 0 ? (
+          companiesPreview.slice(0, 6).map((c) => (
             <span
-              key={index}
-              className="text-xs px-2 py-1 bg-gray-800 text-gray-300 rounded-md truncate max-w-[120px]"
+              key={c.id}
+              className="text-xs px-2 py-1 bg-gray-800 text-gray-300 rounded-md truncate max-w-[160px]"
+              title={c.name}
             >
-              {tag}
+              {c.name}
             </span>
           ))
         ) : (
-          <span className="text-xs text-gray-500">
-            No companies
-          </span>
+          <span className="text-xs text-gray-500">No companies</span>
         )}
       </div>
     </div>

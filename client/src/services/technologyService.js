@@ -1,10 +1,12 @@
-import technologyMock from "../mocks/dashboardMock/technologyMock";
-
-export const getTechnologies = async () => {
+export const getTechnologies = async (orgId) => {
   try {
-    //  replace with API call
-    return Promise.resolve(technologyMock);
+    const url = orgId ? `/api/technologies?orgId=${orgId}` : '/api/technologies';
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const json = await res.json();
+    return Array.isArray(json.data) ? json.data : [];
   } catch (error) {
-    throw error;
+    console.error('Failed to fetch technologies', error);
+    return [];
   }
 };

@@ -25,13 +25,13 @@ function CreateCompany() {
     name: "",
     description: "",
     industry: "",
-    org: "New Org",
+    org: "",
     employees: "",
     founded: "",
     status: "active",
-    tech: [],
+    tech: { frontend: [], backend: [], database: [], devops: [], cloud: "" },
     architecture: "",
-    tools: {},
+    tools: { projectManagement: "", communication: "", cicd: "", monitoring: "" },
   });
 
   const next = () => setStep((s) => Math.min(s + 1, 4));
@@ -42,20 +42,44 @@ function CreateCompany() {
 
     setLoading(true);
 
-    const techArray = form.tech
-      ? Object.values(form.tech).flat().filter(Boolean)
-      : [];
+  // Build payload aligned with backend Company model
+  const payload = {
+    name: form.name,
+    industry: form.industry,
+    description: form.description,
+    foundedYear: Number(form.founded) || undefined,
+    employees: Number(form.employees) || 0,
+    status: form.status === 'review' ? 'stealth' : form.status,
+    brandColor: form.brandColor || undefined,
+    // techStack expects arrays per category
+    techStack: {
+      frontend: form.tech?.frontend || [],
+      backend: form.tech?.backend || [],
+      database: form.tech?.database || [],
+      devops: form.tech?.devops || [],
+      cloud: form.tech?.cloud || undefined,
+    },
+    architecture: form.architecture || undefined,
+    methodology: form.methodology || undefined,
+    lifecycle: form.lifecycle || undefined,
+    engineeringHealth: {
+      testCoverage: Number(form.testCoverage) || 0,
+      techDebt: Number(form.techDebt) || 0,
+      uptime: Number(form.uptime) || 99,
+    },
+    // Map tools: backend expects single strings; pick primary selection
+    tools: {
+      projectManagement: form.tools?.projectManagement || undefined,
+      communication: form.tools?.communication || undefined,
+      cicd: form.tools?.cicd || undefined,
+      monitoring: form.tools?.monitoring || undefined,
+    },
+    notes: form.notes || undefined,
+    tags: form.tags || [],
+    score: form.score || 80,
+  };
 
-    const payload = {
-      ...form,
-      tech: techArray,
-      employees: Number(form.employees) || 0,
-      founded: form.founded || "-",
-      updated: "just now",
-      score: 80,
-    };
-
-    const res = await createCompany(payload);
+  const res = await createCompany(form.org, payload);
 
     setLoading(false);
 

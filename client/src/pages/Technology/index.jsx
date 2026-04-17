@@ -8,13 +8,19 @@ function TechnologyPage() {
   const [data, setData] = useState([]);
   const [category, setCategory] = useState("All");
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const res = await getTechnologies();
-        setData(Array.isArray(res) ? res : []);
+        const arr = Array.isArray(res) ? res : [];
+        setData(arr);
+
+        // derive category list from backend data (unique, preserve order)
+        const cats = Array.from(new Set(arr.map((i) => i.category).filter(Boolean)));
+        setCategories(cats);
       } catch (error) {
         console.error("Failed to load technologies", error);
         setData([]); // safe fallback
@@ -41,7 +47,7 @@ function TechnologyPage() {
 
   return (
     <div className="space-y-6">
-      <TechnologyFilters category={category} setCategory={setCategory} />
+      <TechnologyFilters category={category} setCategory={setCategory} categories={categories} />
       <TechnologyStats data={filteredData} />
       <TechnologyGrid data={filteredData} />
     </div>

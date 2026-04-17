@@ -1,9 +1,10 @@
-const categories = ["All", "Frontend", "Backend", "Database", "Infra", "AI/ML"];
+function TechnologyFilters({ category, setCategory, categories = [] }) {
+  // ensure 'All' is first option
+  const opts = Array.isArray(categories) && categories.length > 0 ? ["All", ...categories] : ["All", "Frontend", "Backend", "Database", "DevOps", "Cloud"];
 
-function TechnologyFilters({ category, setCategory }) {
   return (
     <div className="flex flex-wrap gap-2">
-      {categories.map((item) => (
+      {opts.map((item) => (
         <button
           key={item}
           onClick={() => setCategory(item)}

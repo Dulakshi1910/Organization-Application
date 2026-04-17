@@ -170,6 +170,28 @@ function StepArchitecture({ form, setForm }) {
           />
         </div>
 
+        {/* UPTIME */}
+        <div>
+          <div className="flex justify-between text-xs text-slate-400 mb-2">
+            <span>Uptime</span>
+            <span>{form.uptime || 0}%</span>
+          </div>
+
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={form.uptime || 0}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                uptime: Number(e.target.value),
+              })
+            }
+            className="w-full accent-indigo-500"
+          />
+        </div>
+
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import CreateOrganizationPage from "../pages/Organizations/create/index";
 import Technology from "../pages/Technology"; // ✅ added
 
 import DashboardLayout from "../components/layout/DashboardLayout";
+import CompanyDetail from "../pages/Companies/CompanyDetail";
 
 function AppRoutes() {
   return (
@@ -59,7 +60,6 @@ function AppRoutes() {
           }
         />
 
-        {/* ✅ NEW ROUTE */}
         <Route
           path="/tech-radar"
           element={
@@ -69,6 +69,13 @@ function AppRoutes() {
           }
         />
 
+        <Route path="/" element={<Dashboard />} />
+
+        <Route path="/companies" element={<Companies />} />
+
+        
+        <Route path="/companies/create" element={<CreateCompany />} />
+        <Route path="/companies/:companyId" element={<CompanyDetail />} />
       </Routes>
     </BrowserRouter>
   );

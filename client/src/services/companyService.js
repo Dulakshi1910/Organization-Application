@@ -1,47 +1,110 @@
-import { companiesMock } from "../mocks/dashboardMock/companiesMock";
+// Company service using backend API
 
-const STORAGE_KEY = "companies_data";
-
-// GET
-export const getCompanies = async () => {
+// GET companies for an organization
+export const getCompanies = async (orgId) => {
+  if (!orgId) return [];
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const res = await fetch(`/api/organizations/${orgId}/companies`);
+    if (!res.ok) return [];
+    const json = await res.json();
+    const companies = Array.isArray(json.data) ? json.data : [];
 
-    if (stored) {
-      return JSON.parse(stored);
-    }
+    // Fetch orgs to map organization id -> name
+    const orgsRes = await fetch('/api/organizations');
+    const orgsJson = orgsRes.ok ? await orgsRes.json() : { data: [] };
+    const orgs = Array.isArray(orgsJson.data) ? orgsJson.data : [];
+    const orgMap = orgs.reduce((acc, o) => {
+      acc[o._id || o.id] = o.name || o.slug || "";
+      return acc;
+    }, {});
 
-    // first load
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(companiesMock));
-    return companiesMock;
+    // Normalize company shape for the UI
+    const normalized = companies.map((c) => ({
+      id: c._id || c.id,
+      name: c.name,
+      description: c.description,
+      organization: c.organization, // keep id
+      org: orgMap[c.organization] || (c.organization && c.organization.name) || "",
+      employees: c.employees || 0,
+      tech: c.techStack
+        ? {
+            frontend: c.techStack.frontend || [],
+            backend: c.techStack.backend || [],
+            database: c.techStack.database || [],
+            devops: c.techStack.devops || [],
+            cloud: c.techStack.cloud || "",
+          }
+        : c.tech || {},
+      status: c.status,
+      founded: c.foundedYear || c.founded || "-",
+      updated: c.updatedAt ? new Date(c.updatedAt).toLocaleDateString() : c.updated || "",
+      raw: c,
+    }));
+
+    return normalized;
   } catch {
     return [];
   }
 };
 
-// CREATE
-export const createCompany = async (payload) => {
+export const getCompanyById = async (companyId) => {
+  if (!companyId) return null;
   try {
-    if (!payload) return { success: false };
-
-    const existing =
-      JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-
-    const newCompany = {
-      ...payload,
-      id: Date.now(),
-      updated: "just now",
-      score: payload.score || 80,
-      org: payload.org || "New Org",
-      tech: payload.tech || [],
-    };
-
-    const updated = [newCompany, ...existing];
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-
-    return { success: true, data: newCompany };
+    const res = await fetch(`/api/companies/${companyId}`);
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data || null;
   } catch {
-    return { success: false };
+    return null;
+  }
+};
+
+// Create a company under an organization. If orgId isn't provided, attempt to
+// infer it from `payload.org` (name/slug) or fall back to the first org.
+export const createCompany = async (orgIdOrPayload, payload) => {
+  // Support both createCompany(payload) and createCompany(orgId, payload)
+  let orgId = null;
+  let body = payload;
+  if (payload === undefined) {
+    body = orgIdOrPayload;
+  } else {
+    orgId = orgIdOrPayload;
+  }
+
+  if (!body) return { success: false };
+
+  try {
+    let targetOrgId = orgId;
+
+    if (!targetOrgId) {
+      const orgsRes = await fetch('/api/organizations');
+      const orgsJson = orgsRes.ok ? await orgsRes.json() : { data: [] };
+      const orgs = Array.isArray(orgsJson.data) ? orgsJson.data : [];
+
+      if (body.org) {
+        const matched = orgs.find((o) => o.name === body.org || o.slug === body.org);
+        targetOrgId = matched?._id || matched?.id || null;
+      }
+
+      if (!targetOrgId && orgs.length) targetOrgId = orgs[0]._id || orgs[0].id;
+    }
+
+    if (!targetOrgId) return { success: false, error: 'No organization available' };
+
+    const res = await fetch(`/api/organizations/${targetOrgId}/companies`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      return { success: false, error: err };
+    }
+
+    const json = await res.json();
+    return { success: true, data: json.data };
+  } catch (e) {
+    return { success: false, error: e };
   }
 };
